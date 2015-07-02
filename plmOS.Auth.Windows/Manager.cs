@@ -34,25 +34,12 @@ namespace plmOS.Auth.Windows
 {
     public class Manager : IManager
     {
-        private Dictionary<String, Identity> IdentityCache;
-
-        private Identity BuildIdentity(WindowsIdentity WindowsIdentity)
+ 
+        public IIdentity Login(ICredentials Credentials)
         {
-            if (WindowsIdentity.IsAuthenticated)
+            if ( this.Principal.Identity.IsAuthenticated)
             {
-                String[] parts = WindowsIdentity.Name.Split('\\');
-
-                if (!this.IdentityCache.ContainsKey(WindowsIdentity.User.AccountDomainSid.Value))
-                {
-                    this.IdentityCache[WindowsIdentity.User.AccountDomainSid.Value] = new Identity(WindowsIdentity.User.AccountDomainSid.Value, parts[0], parts[1]);
-                }
-                else
-                {
-                    this.IdentityCache[WindowsIdentity.User.AccountDomainSid.Value].Domain = parts[0];
-                    this.IdentityCache[WindowsIdentity.User.AccountDomainSid.Value].Name = parts[1];
-                }
-
-                return this.IdentityCache[WindowsIdentity.User.AccountDomainSid.Value];
+                return this.Principal.Identity;
             }
             else
             {
@@ -60,15 +47,9 @@ namespace plmOS.Auth.Windows
             }
         }
 
-        public IIdentity Login(ICredentials Credentials)
-        {
-            WindowsPrincipal principal = ((Windows.Credentials)Credentials).Principal;
-            WindowsIdentity identity = (WindowsIdentity)principal.Identity;
+        private Dictionary<WindowsPrincipal, Principal> PrincipalCache;
 
-            return this.BuildIdentity(identity);
-        }
-
-        public IIdentity CurrentIdentity
+        public IPrincipal Principal
         {
             get
             {
@@ -81,16 +62,18 @@ namespace plmOS.Auth.Windows
                 // Get the Principal
                 WindowsPrincipal principal = (WindowsPrincipal)Thread.CurrentPrincipal;
 
-                // Get Identity
-                WindowsIdentity identity = (WindowsIdentity)principal.Identity;
+                if (!this.PrincipalCache.ContainsKey(principal))
+                {
+                    this.PrincipalCache[principal] = new Principal(principal);
+                }
 
-                return this.BuildIdentity(identity);
+                return this.PrincipalCache[principal];
             }
         }
 
         public Manager()
         {
-            this.IdentityCache = new Dictionary<String, Identity>();
+            this.PrincipalCache = new Dictionary<WindowsPrincipal, Principal>();
         }
     }
 }

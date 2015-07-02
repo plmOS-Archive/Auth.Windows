@@ -42,6 +42,7 @@
     <Compile Include="Credentials.cs" />
     <Compile Include="Identity.cs" />
     <Compile Include="Manager.cs" />
+    <Compile Include="Principal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

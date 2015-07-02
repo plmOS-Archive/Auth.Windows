@@ -27,19 +27,37 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Principal;
+using System.Threading;
 
-namespace plmOS.Auth.Windows.Debug
+namespace plmOS.Auth.Windows
 {
-    class Program
+    public class Principal : IPrincipal
     {
-        static void Main(string[] args)
-        {
-            Manager manager = new Manager();
-            Credentials credentials = new Credentials();
-            Identity identity = (Identity)manager.Login(credentials);
+        private WindowsPrincipal WindowsPrincipal;
 
-            IPrincipal currentpricipal = manager.Principal;
-            IIdentity currentidentity = currentpricipal.Identity;
+        private Dictionary<WindowsIdentity, Identity> IdentityCache;
+
+        public IIdentity Identity
+        {
+            get
+            {
+                // Get Identity
+                WindowsIdentity identity = (WindowsIdentity)this.WindowsPrincipal.Identity;
+
+                if (!this.IdentityCache.ContainsKey(identity))
+                {
+                    this.IdentityCache[identity] = new Identity(identity);
+                }
+
+                return this.IdentityCache[identity];
+            }
+        }
+
+        internal Principal(WindowsPrincipal WindowsPrincipal)
+        {
+            this.WindowsPrincipal = WindowsPrincipal;
+            this.IdentityCache = new Dictionary<WindowsIdentity, Identity>();
         }
     }
 }

@@ -27,16 +27,72 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Principal;
+using System.Threading;
 
 namespace plmOS.Auth.Windows
 {
     public class Identity : IIdentity
     {
-        public String ID { get; private set; }
+        private WindowsIdentity WindowsIdentity;
 
-        public String Domain { get; internal set; }
+        public String ID
+        {
+            get
+            {
+                return this.WindowsIdentity.User.Value;
+            }
+        }
 
-        public String Name { get; internal set; }
+        public String Type
+        {
+            get
+            {
+                return this.WindowsIdentity.AuthenticationType;
+            }
+        }
+
+        public String Domain
+        {
+            get
+            {
+                String[] parts = this.WindowsIdentity.Name.Split('\\');
+
+                if (parts.Length == 2)
+                {
+                    return parts[0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public String Name
+        {
+            get
+            {
+                String[] parts = this.WindowsIdentity.Name.Split('\\');
+
+                if (parts.Length == 2)
+                {
+                    return parts[1];
+                }
+                else
+                {
+                    return parts[0];
+                }
+            }
+        }
+
+        public Boolean IsAuthenticated
+        {
+            get
+            {
+                return this.WindowsIdentity.IsAuthenticated;
+            }
+        }
 
         public bool Equals(IIdentity other)
         {
@@ -72,11 +128,9 @@ namespace plmOS.Auth.Windows
             return this.Domain + "\\" + this.Name;
         }
 
-        internal Identity(String ID, String Domain, String Name)
+        internal Identity(WindowsIdentity WindowsIdentity)
         {
-            this.ID = ID;
-            this.Domain = Domain;
-            this.Name = Name;
+            this.WindowsIdentity = WindowsIdentity;
         }
     }
 }

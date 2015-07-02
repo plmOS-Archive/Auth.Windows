@@ -34,18 +34,9 @@ namespace plmOS.Auth.Windows
 {
     public class Credentials : ICredentials
     {
-        internal WindowsPrincipal Principal { get; private set; }
-
         public Credentials()
         {
-            // Get Domain
-            AppDomain domain = Thread.GetDomain();
-
-            // Set Policy to Windows Principal
-            domain.SetPrincipalPolicy(PrincipalPolicy.WindowsPrincipal);
-
-            // Get the Principal
-            this.Principal = (WindowsPrincipal)Thread.CurrentPrincipal;
+        
         }
     }
 }
