@@ -49,9 +49,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Auth\plmOS.Auth\plmOS.Auth.csproj">
-      <Project>{7975d9da-95cb-404c-96d5-4a219bb3c31e}</Project>
-      <Name>plmOS.Auth</Name>
+    <ProjectReference Include="..\..\Model\plmOS\plmOS.csproj">
+      <Project>{1556ca37-8b2e-4d29-bd7c-55e342dbc611}</Project>
+      <Name>plmOS</Name>
     </ProjectReference>
     <ProjectReference Include="..\plmOS.Auth.Windows\plmOS.Auth.Windows.csproj">
       <Project>{e8985f58-9a3d-478f-afff-4bd2a931151a}</Project>
