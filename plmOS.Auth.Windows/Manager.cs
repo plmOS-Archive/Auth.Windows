@@ -34,17 +34,9 @@ namespace plmOS.Auth.Windows
 {
     public class Manager : IManager
     {
- 
         public IIdentity Login(ICredentials Credentials)
         {
-            if ( this.Principal.Identity.IsAuthenticated)
-            {
-                return this.Principal.Identity;
-            }
-            else
-            {
-                throw new LoginException();
-            }
+            return this.Principal.Identity;
         }
 
         private Dictionary<WindowsPrincipal, Principal> PrincipalCache;
